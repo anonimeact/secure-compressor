@@ -12,16 +12,26 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
+
 # secure-compressor
 Encrypt a string and compress it into a smaller size
 
 ## encrypt
 
+Only encrypt:
+
+    final compress = await compress(originData, keyString);
+    
 To encrypt and also compress the data:
 
-final compress = await compressAndEncrypt(originData, keyString);
+    final compress = await compressAndEncrypt(originData, keyString);
 
 ## decrypt
 
-To encrypt and also uncompress the data:
-final uncompress = uncompressAndDecrypt(compress, keyString);
+Only decrypt:
+
+    final uncompress = uncompress(compress, keyString);
+To decrypt and also uncompress the data:
+
+    final uncompress = uncompressAndDecrypt(compress, keyString);
+
