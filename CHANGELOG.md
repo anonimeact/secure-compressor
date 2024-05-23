@@ -1,3 +1,7 @@
-## 0.0.1
+## 1.0.1
 
-* TODO: Describe initial release.
+* Update platform supported
+
+## 1.0.0
+
+* Initial release.

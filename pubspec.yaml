@@ -1,7 +1,7 @@
 name: secure_compressor
-description: "A new Flutter package project."
-version: 0.0.1
-homepage: null
+description: "Encrypt a string and compress it into a smaller size"
+version: 1.0.1
+homepage: https://github.com/anonimeact/secure-compressor
 
 environment:
   sdk: '>=3.3.1 <4.0.0'
@@ -18,10 +18,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
-flutter: null
 
 # To add assets to your package, add an assets section, like this:
 # assets:
