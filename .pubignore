@@ -1,0 +1,5 @@
+# See https://dart.dev/tools/pub/ignoring-files
+
+# Don't include common files
+.flutter-plugins
+.flutter-plugins-dependencies
