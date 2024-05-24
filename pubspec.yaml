@@ -1,6 +1,6 @@
 name: secure_compressor
 description: "Encrypt a string and compress it into a smaller size"
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/anonimeact/secure-compressor
 
 environment:
