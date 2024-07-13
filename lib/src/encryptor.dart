@@ -52,7 +52,9 @@ class SecureCompressor {
   /// Returns the compressed data as a string.
   static String compress(String data) {
     try {
-      return data.isEmpty ? '' : String.fromCharCodes(gzip.encode(utf8.encode(data)));
+      return data.isEmpty
+          ? ''
+          : String.fromCharCodes(gzip.encode(utf8.encode(data)));
     } catch (_) {
       return ':::: Error uncompressing data';
     }
@@ -75,10 +77,12 @@ class SecureCompressor {
   /// If [ivString] is not provided, a part of [keyString] will be used as the initialization vector (IV).
   ///
   /// Returns the compressed and encrypted data as a string.
-  static String compressAndEncrypt(String data, String keyString, {String? ivString}) {
+  static String compressAndEncrypt(String data, String keyString,
+      {String? ivString}) {
     if (data.isEmpty) return '';
     final compressedData = compress(data);
-    final encryptedData = encrypt(compressedData, keyString, ivString: ivString);
+    final encryptedData =
+        encrypt(compressedData, keyString, ivString: ivString);
     return compress(encryptedData);
   }
 
@@ -88,10 +92,12 @@ class SecureCompressor {
   /// If [ivString] is not provided, a part of [keyString] will be used as the initialization vector (IV).
   ///
   /// Returns the decompressed and decrypted data as a string.
-  static String uncompressAndDecrypt(String data, String keyString, {String? ivString}) {
+  static String uncompressAndDecrypt(String data, String keyString,
+      {String? ivString}) {
     if (data.isEmpty) return '';
     final uncompressedData = uncompress(data);
-    final decryptedData = decrypt(uncompressedData, keyString, ivString: ivString);
+    final decryptedData =
+        decrypt(uncompressedData, keyString, ivString: ivString);
     return uncompress(decryptedData);
   }
 
