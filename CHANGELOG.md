@@ -1,3 +1,13 @@
+## 1.0.4
+
+* Dart formating class
+* Update README
+
+## 1.0.3
+
+* Add example (project) `package`
+* Add shareFile function to make easier to generate file encryption
+
 ## 1.0.2
 
 * Refactor `SecureCompressor` class to use static methods and add comments for improved readability and maintainability.

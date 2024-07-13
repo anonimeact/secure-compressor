@@ -33,56 +33,60 @@ secure_compressor: <Latest-Version>
 
 ```
 
+  
+
 Then, run flutter pub get to fetch the package.
+
+  
 
 ## Usages
 
-**Notes**
-> keyString must be 32 character
-> Initialization Vector (IV) [ivString] must be 16 character
+    ::: Notes :::
+     - keyString must be 32 character
+     - Initialization Vector (IV) [ivString] must be 16 character
 
-#### Encrypt
+### Encrypt
 
 Encrypt a string using AES encryption:
 ```dart
 
-final encryptedData = await  SecureCompressor.encrypt(data, keyString, ivString: ivString);
+final result = await  SecureCompressor.encrypt(data, keyString, ivString: ivString);
 
 ```
 Compress and then encrypt a string:
 ```dart
 
-final compressedAndEncryptedData = await  SecureCompressor.compressAndEncrypt(data, keyString, ivString: ivString);
+final result = await  SecureCompressor.compressAndEncrypt(data, keyString, ivString: ivString);
 
 ```
-#### Decrypt
+### Decrypt
 
 Decrypt an AES encrypted string:
 ```dart
 
-final decryptedData = SecureCompressor.decrypt(encryptedData, keyString, ivString: ivString);
+final result = SecureCompressor.decrypt(encryptedData, keyString, ivString: ivString);
 
 ```
 Decrypt and then uncompress a string:
 ```dart
 
-final uncompressedAndDecryptedData = SecureCompressor.uncompressAndDecrypt(compressedAndEncryptedData, keyString, ivString: ivString);
+final result = SecureCompressor.uncompressAndDecrypt(compressedAndEncryptedData, keyString, ivString: ivString);
 
 ```
 
-#### Save Data to Local Storage
+### Save Data to Local Storage
 
 Save data to a local file:
 ```dart
 
-await  SecureCompressor.saveDataToLocal(fileName, data);
+	SecureCompressor.saveDataToLocal(fileName, data);
 
 ```
 
-#### Share Data to Media Platform Device (WA, email, etc)
+### Share Data to Media Platform Device (WA, email, etc)
 Share data to a media platform device:
 ```dart
 
-await  SecureCompressor.shareFile(fileName, data);
+	SecureCompressor.shareFile(fileName, data);
 
 ```
