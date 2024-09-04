@@ -1,4 +1,4 @@
-package com.example.example
+package com.anonimeact.securecompressorgenerator
 
 import io.flutter.embedding.android.FlutterActivity
 

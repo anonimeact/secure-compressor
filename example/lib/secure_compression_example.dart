@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:secure_compressor/secure_compressor.dart';
 
 class SecureCompressionExample extends StatefulWidget {
@@ -12,8 +13,16 @@ class SecureCompressionExample extends StatefulWidget {
 class _SecureCompressionExampleState extends State<SecureCompressionExample> {
 
   var dataResult = "";
+  String? errorKeyString;
+  final defaultKey = "50?thisIsEx4mplefor32EncryptKey!";
   final inputController = TextEditingController();
   final keyController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadAd();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,10 +62,24 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                     suffix: InkWell(
                       onTap: () => keyController.text = "",
-                      child: const Icon(Icons.close, color: Colors.black, size: 20))
+                      child: const Icon(Icons.close, color: Colors.black, size: 20)),
+                      errorText: errorKeyString
                     ),
               ),
-
+              Row(mainAxisSize: MainAxisSize.min, children: [
+                const Text("Default Key:", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w300)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 3, right: 10),
+                  child: Text(defaultKey, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
+                ),
+                InkWell(
+                  onTap: () {
+                    Clipboard.setData(ClipboardData(text: defaultKey));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied!")));
+                  },
+                  child: const Icon(Icons.copy_outlined))
+              ]),
+              const SizedBox(height: 16),
               /** Button action widget */
               buttonActionWidget(),
 
@@ -64,7 +87,7 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
               Visibility(
                   visible: dataResult.isNotEmpty,
                   child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 16),
+                    margin: const EdgeInsets.only(top: 16),
                     width: double.infinity,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
@@ -97,7 +120,15 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
                         )
                       ],
                     ),
-                  ))
+                  )),
+              _bannerAd != null
+                ? Container(
+                    margin: const EdgeInsets.only(top: 16),
+                    width: _bannerAd!.size.width.toDouble(),
+                    height: _bannerAd!.size.height.toDouble(),
+                    child: AdWidget(ad: _bannerAd!),
+                  )
+                : Container()
             ],
           ),
         ),
@@ -114,7 +145,9 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
-                  dataResult = SecureCompressor.encrypt(originData, encryptionKey);
+                  if (isKeyStringValid()) {
+                    dataResult = SecureCompressor.encrypt(originData, encryptionKey);
+                  }
                   hideSoftKeyboard();
                 });
               },
@@ -124,7 +157,9 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
-                  dataResult = SecureCompressor.compressAndEncrypt(originData, encryptionKey);
+                  if (isKeyStringValid()) {
+                    dataResult = SecureCompressor.compressAndEncrypt(originData, encryptionKey);
+                  }
                   hideSoftKeyboard();
                 });
               },
@@ -138,7 +173,9 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
-                  dataResult = SecureCompressor.decrypt(originData, encryptionKey);
+                  if (isKeyStringValid()) {
+                    dataResult = SecureCompressor.decrypt(originData, encryptionKey);
+                  }
                   hideSoftKeyboard();
                 });
               },
@@ -148,7 +185,9 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
-                  dataResult = SecureCompressor.uncompressAndDecrypt(originData, encryptionKey);
+                  if (isKeyStringValid()) {
+                    dataResult = SecureCompressor.uncompressAndDecrypt(originData, encryptionKey);
+                  }
                   hideSoftKeyboard();
                 });
               },
@@ -158,15 +197,49 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
     ]);
   }
 
+  bool isKeyStringValid() {
+    final key = keyController.text;
+    final isValid = key.isEmpty
+        ? true
+        : key.length == 32
+            ? true
+            : false;
+    errorKeyString = isValid ? null : "Custom key must be 32 character" ;
+    if (!isValid) {
+      dataResult = "";
+    }
+    return isValid;
+  }
+
   void hideSoftKeyboard() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
   void copyData() {
     Clipboard.setData(ClipboardData(text: dataResult));
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied!")));
   }
 
   void shareData() {
     SecureCompressor.shareFile("sc_result${DateTime.now().millisecondsSinceEpoch}.txt", dataResult);
+  }
+  
+  BannerAd? _bannerAd;
+  void loadAd() {
+    _bannerAd = BannerAd(
+      adUnitId: 'ca-app-pub-2785838023943615/8094872898',
+      request: const AdRequest(),
+      size: AdSize.fullBanner,
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          debugPrint('$ad loaded.');
+        },
+        
+        onAdFailedToLoad: (ad, err) {
+          debugPrint('BannerAd failed to load: $err');
+          ad.dispose();
+        },
+      ),
+    )..load();
   }
 }
