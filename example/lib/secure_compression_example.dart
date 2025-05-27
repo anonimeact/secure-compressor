@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -22,6 +24,13 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
   void initState() {
     super.initState();
     loadAd();
+    final key = "duDluYlEkzk68D3fFcL80iG6FF9n1cvW"; // 32 karakter
+    final iv = "h7EvzZ+vwkjns0vt"; // 16 karakter
+    final originalText = "110317950632480998248";
+    final encrypted = SecureCompressor.encrypt(originalText, key, ivString: iv);
+    final decrypt = SecureCompressor.decrypt(encrypted, key, ivString: iv);
+    print("SecureCompressor: enc $encrypted ${"/DPZMixdbBPJbUszJe4tuA==" == encrypted}");
+    print("SecureCompressor: dec $decrypt");
   }
 
   @override

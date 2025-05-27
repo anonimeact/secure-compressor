@@ -2,7 +2,7 @@ name: secure_compressor
 description: "This is a Dart package that provides utilities for securely
   encrypting, decrypting, compressing, and decompressing string data using AES
   encryption and gzip compression"
-version: 1.0.5
+version: 1.0.6
 homepage: https://github.com/anonimeact/secure-compressor
 
 environment:
@@ -14,13 +14,13 @@ dependencies:
   flutter:
     sdk: flutter
   path_provider: ^2.1.5
-  share_plus: ^10.1.3
+  share_plus: ^11.0.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0
   flutter_test:
     sdk: flutter
-  path_provider_platform_interface: ^2.0.2
+  path_provider_platform_interface: ^2.1.2
 
 platforms:
   ? android

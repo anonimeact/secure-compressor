@@ -10,7 +10,8 @@ class SecureCompressor {
   /// Returns a Base64 encoded string of the encrypted data.
   ///
   /// Throws an [ArgumentError] if [keyString] is not 32 characters long.
-  static String encrypt(String data, String keyString, {String? ivString}) {
+  static String encrypt(String data, String keyString,
+      {String? ivString, encriptor.AESMode mode = encriptor.AESMode.sic}) {
     if (data.isEmpty) {
       return '';
     } else if (keyString.length < 32) {
@@ -18,7 +19,7 @@ class SecureCompressor {
     }
     final key = encriptor.Key.fromUtf8(keyString);
     final iv = encriptor.IV.fromUtf8(ivString ?? keyString.substring(0, 16));
-    final encrypter = encriptor.Encrypter(encriptor.AES(key));
+    final encrypter = encriptor.Encrypter(encriptor.AES(key, mode: mode));
     final encryptedData = encrypter.encrypt(data, iv: iv);
     return encryptedData.base64;
   }
@@ -31,7 +32,8 @@ class SecureCompressor {
   /// Returns the decrypted data as a string.
   ///
   /// Throws an [ArgumentError] if [keyString] is not 32 characters long.
-  static String decrypt(String data, String keyString, {String? ivString}) {
+  static String decrypt(String data, String keyString,
+      {String? ivString, encriptor.AESMode mode = encriptor.AESMode.sic}) {
     if (data.isEmpty) {
       return '';
     } else if (keyString.length < 32) {
@@ -39,7 +41,7 @@ class SecureCompressor {
     }
     final key = encriptor.Key.fromUtf8(keyString);
     final iv = encriptor.IV.fromUtf8(ivString ?? keyString.substring(0, 16));
-    final encrypter = encriptor.Encrypter(encriptor.AES(key));
+    final encrypter = encriptor.Encrypter(encriptor.AES(key, mode: mode));
     try {
       return encrypter.decrypt64(data, iv: iv);
     } catch (_) {
@@ -78,11 +80,11 @@ class SecureCompressor {
   ///
   /// Returns the compressed and encrypted data as a string.
   static String compressAndEncrypt(String data, String keyString,
-      {String? ivString}) {
+      {String? ivString, encriptor.AESMode mode = encriptor.AESMode.sic}) {
     if (data.isEmpty) return '';
     final compressedData = compress(data);
     final encryptedData =
-        encrypt(compressedData, keyString, ivString: ivString);
+        encrypt(compressedData, keyString, ivString: ivString, mode: mode);
     return compress(encryptedData);
   }
 
@@ -93,11 +95,11 @@ class SecureCompressor {
   ///
   /// Returns the decompressed and decrypted data as a string.
   static String uncompressAndDecrypt(String data, String keyString,
-      {String? ivString}) {
+      {String? ivString, encriptor.AESMode mode = encriptor.AESMode.sic}) {
     if (data.isEmpty) return '';
     final uncompressedData = uncompress(data);
     final decryptedData =
-        decrypt(uncompressedData, keyString, ivString: ivString);
+        decrypt(uncompressedData, keyString, ivString: ivString, mode: mode);
     return uncompress(decryptedData);
   }
 

@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Update the packages inside
+
 ## 1.0.5
 
 * Update the packages inside
