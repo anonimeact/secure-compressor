@@ -29,6 +29,9 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
     final decrypt = SecureCompressor.decrypt(encrypted, key, ivString: iv);
     print("SecureCompressor: enc $encrypted ${"/DPZMixdbBPJbUszJe4tuA==" == encrypted}");
     print("SecureCompressor: dec $decrypt");
+
+    StorageHelper.saveString("test_key", "test_value");
+    final data = StorageHelper.getString('test_key');
   }
 
   @override

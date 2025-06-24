@@ -1,3 +1,7 @@
+## 1.0.10
+
+* Auto init getStorage on initialize StorageHelper
+
 ## 1.0.9
 
 * Fix storage helper linking

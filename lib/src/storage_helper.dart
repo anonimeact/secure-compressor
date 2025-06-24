@@ -1,10 +1,27 @@
 part of '../secure_compressor.dart';
 
 class StorageHelper {
+  /// Singleton instance of StorageHelper.
+  /// This ensures that only one instance of StorageHelper is created and used throughout the application.
+  static final StorageHelper _instance = StorageHelper._internal();
+  // Factory constructor to return the singleton instance.
+  factory StorageHelper() => _instance;
+
+  /// The name of the storage box.
+  /// This is used to identify the storage box in GetStorage.
+  /// It is initialized in the [initialize] method.
+  /// It must be set before any other methods are called.
+  /// If not set, it will throw an error when trying to access the storage.
+  /// It is used to store the data in a persistent storage.
+  /// It is recommended to set this to a unique name for your application.
+  /// Example: 'my_app_storage'.
   static late String _storageName;
   static late String _encryptionKey;
   static late bool _isEncrypKeyValue;
-  static GetStorage get _box => GetStorage(_storageName);
+  static late GetStorage _box;
+
+  StorageHelper._internal();
+
 
   /// Initializes the storage helper with the given parameters.
   /// [storageName] is the name of the storage box.
@@ -35,6 +52,9 @@ class StorageHelper {
       key = unixId;
     }
     _encryptionKey = key.substring(0, 32);
+    
+    await GetStorage.init(storageName);
+    _box = GetStorage(_storageName);
   }
 
   /// Clears the storage.

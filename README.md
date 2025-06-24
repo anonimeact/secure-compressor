@@ -114,7 +114,7 @@ Initializes the storage helper with the given parameters first befor run the app
       'YOUR_STORAGE_NAME',
       isEncryptKeyAndValue: true, // Default true
       encryptionKey: "YOUR_ENCRYPTION_KEY_MUST_BE_32_CHAR", // If null, will use unix id from devices used
-      isKeyEncrypted: true, // Default true
+      isKeyEncrypted: false, // Default false
     );
 
 ```
