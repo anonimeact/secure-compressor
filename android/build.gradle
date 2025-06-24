@@ -28,6 +28,7 @@ android {
     namespace = "com.anonimeact.secure_compressor"
 
     compileSdk = 35
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

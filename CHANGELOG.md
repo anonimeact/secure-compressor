@@ -1,3 +1,7 @@
+## 1.0.8
+
+* Fix method channel routing for android
+
 ## 1.0.7
 
 * Add modules to save primitif data type with encryption data options

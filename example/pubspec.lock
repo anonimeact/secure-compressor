@@ -357,7 +357,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.7"
   share_plus:
     dependency: transitive
     description:
