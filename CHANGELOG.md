@@ -1,3 +1,7 @@
+## 1.0.9
+
+* Fix storage helper linking
+
 ## 1.0.8
 
 * Fix method channel routing for android

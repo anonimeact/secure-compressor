@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:secure_compressor/secure_compressor.dart';
 import 'package:secure_compressor/src/channels/secure_compressor_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:secure_compressor/src/storage_helper.dart';
 
 class MockSecureCompressorPlatform with MockPlatformInterfaceMixin implements SecureCompressorPlatform {
   @override

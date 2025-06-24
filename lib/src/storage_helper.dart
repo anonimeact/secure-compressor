@@ -1,5 +1,4 @@
-import 'package:get_storage/get_storage.dart';
-import 'package:secure_compressor/secure_compressor.dart';
+part of '../secure_compressor.dart';
 
 class StorageHelper {
   static late String _storageName;
