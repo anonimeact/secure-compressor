@@ -17,7 +17,7 @@ class SecureCompressor {
     } else if (keyString.length < 32) {
       return 'keyString length must be 32 characters.';
     }
-    final key = encriptor.Key.fromUtf8(keyString);
+    final key = encriptor.Key.fromUtf8(keyString.substring(0, 32));
     final iv = encriptor.IV.fromUtf8(ivString ?? keyString.substring(0, 16));
     final encrypter = encriptor.Encrypter(encriptor.AES(key, mode: mode));
     final encryptedData = encrypter.encrypt(data, iv: iv);
