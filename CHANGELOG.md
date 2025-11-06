@@ -1,3 +1,8 @@
+## 1.0.11
+
+* Auto trim key if more than 32 character
+* Remove share plus package
+
 ## 1.0.10
 
 * Auto init getStorage on initialize StorageHelper
