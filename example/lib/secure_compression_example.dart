@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:secure_compressor/secure_compressor.dart';
+import 'package:share_plus/share_plus.dart';
 
 class SecureCompressionExample extends StatefulWidget {
   const SecureCompressionExample({super.key});
@@ -27,11 +30,11 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
     const originalText = "110317950632480998248";
     final encrypted = SecureCompressor.encrypt(originalText, key, ivString: iv);
     final decrypt = SecureCompressor.decrypt(encrypted, key, ivString: iv);
-    print("SecureCompressor: enc $encrypted ${"/DPZMixdbBPJbUszJe4tuA==" == encrypted}");
-    print("SecureCompressor: dec $decrypt");
+    log("SecureCompressor: enc $encrypted ${"/DPZMixdbBPJbUszJe4tuA==" == encrypted}");
+    log("SecureCompressor: dec $decrypt");
 
     StorageHelper.saveString("test_key", "test_value");
-    final data = StorageHelper.getString('test_key');
+    final _ = StorageHelper.getString('test_key');
   }
 
   @override
@@ -230,8 +233,15 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied!")));
   }
 
-  void shareData() {
-    SecureCompressor.shareFile("sc_result${DateTime.now().millisecondsSinceEpoch}.txt", dataResult);
+  Future<void> shareData() async {
+    /// Share the given [data] to media platform with the provided [fileName].
+    ///
+    /// The file will be shared in the  media platform device used
+    if (dataResult.isEmpty) return;
+    final fileName = "sc_result${DateTime.now().millisecondsSinceEpoch}.txt";
+    final file = await SecureCompressor.saveDataToLocal(fileName, dataResult);
+    final params = ShareParams(text: 'Encrypted file', files: [XFile(file!.path)]);
+    SharePlus.instance.share(params);
   }
   
   BannerAd? _bannerAd;
