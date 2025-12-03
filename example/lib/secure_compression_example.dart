@@ -33,8 +33,8 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
     log("SecureCompressor: enc $encrypted ${"/DPZMixdbBPJbUszJe4tuA==" == encrypted}");
     log("SecureCompressor: dec $decrypt");
 
-    StorageHelper.saveString("test_key", "test_value");
-    final _ = StorageHelper.getString('test_key');
+    StorageHelper.saveString(key: "test_key", value: "test_value");
+    final _ = StorageHelper.getString(key: 'test_key');
   }
 
   @override

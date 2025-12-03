@@ -17,6 +17,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('maintrya ${StorageHelper.getString(key: 'hello')}');
+    StorageHelper.saveString(key: 'hello', value: 'Hellow');
+    debugPrint('maintrya filled ${StorageHelper.getString(key: 'hello')}');
+    StorageHelper.eraseData('hello');
+    debugPrint('maintrya Erased ${StorageHelper.getString(key: 'hello')}');
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       color: Colors.white,

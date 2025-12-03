@@ -1,3 +1,7 @@
+## 1.0.13
+
+* Add function to save and get num type varsion
+
 ## 1.0.12
 
 * Add eraseData() funcion to remove data by the key

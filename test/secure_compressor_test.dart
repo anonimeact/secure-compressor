@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:secure_compressor/secure_compressor.dart';
@@ -12,13 +14,24 @@ class MockSecureCompressorPlatform with MockPlatformInterfaceMixin implements Se
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const MethodChannel channel = MethodChannel('secure_compressor');
-  setUp(() async {
+  const MethodChannel pathProvider = MethodChannel('plugins.flutter.io/path_provider');
+  setUpAll(() async {
+    
     // Mock method channel call
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (
       MethodCall methodCall,
     ) async {
       if (methodCall.method == 'getUnixId') {
         return 'mocked-unix-id-1234567890';
+      }
+      return null;
+    });
+    final tmpDir = Directory.systemTemp.createTempSync();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(pathProvider, (
+      MethodCall call,
+    ) async {
+      if (call.method == 'getApplicationDocumentsDirectory') {
+        return tmpDir.path;
       }
       return null;
     });
@@ -31,8 +44,9 @@ void main() {
     );
   });
 
-  tearDown(() {
+  tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(pathProvider, null);
   });
 
   group('encrypt decrrypt string', () {
@@ -57,29 +71,41 @@ void main() {
 
   group('storage helper test', () {
     test('string test', () {
-      StorageHelper.saveString('test_key', 'test_value');
-      final value = StorageHelper.getString('test_key');
+      StorageHelper.saveString(key: 'test_key',value: 'test_value');
+      final value = StorageHelper.getString(key: 'test_key');
       expect(value, 'test_value');
     });
     test('empty string test', () {
-      StorageHelper.saveString('test_key', '');
-      final value = StorageHelper.getString('test_key');
+      StorageHelper.saveString(key: 'test_key', value:  '');
+      final value = StorageHelper.getString(key: 'test_key');
       expect(value, '');
     });
     test('bool test', () {
-      StorageHelper.saveBoolean('test_key', true);
-      final value = StorageHelper.getBoolean('test_key');
+      StorageHelper.saveBoolean(key: 'test_key', value:  true);
+      final value = StorageHelper.getBoolean(key: 'test_key');
       expect(value, true);
     });
     test('int test', () {
-      StorageHelper.saveInt('test_key', 10);
-      final value = StorageHelper.getInt('test_key');
+      StorageHelper.saveInt(key: 'test_key',value:  10);
+      final value = StorageHelper.getInt(key: 'test_key');
       expect(value, 10);
     });
     test('double test', () {
-      StorageHelper.saveDouble('test_key', 10.0);
-      final value = StorageHelper.getDouble('test_key');
+      StorageHelper.saveDouble(key: 'test_key', value:  10.0);
+      final value = StorageHelper.getDouble(key: 'test_key');
       expect(value, 10.0);
+    });
+    test('num test', () {
+      final num testNum = 10;
+      final num testNumDouble= 10.1;
+      StorageHelper.saveNum(key: 'test_key_num_int', value: testNum);
+      final valueInt = StorageHelper.getNum(key: 'test_key_num_int');
+
+      StorageHelper.saveNum(key: 'test_key_num_double', value: testNumDouble);
+      final valueDouble = StorageHelper.getNum(key: 'test_key_num_double');
+
+      expect(valueInt, testNum);
+      expect(valueDouble, testNumDouble);
     });
   });
 }

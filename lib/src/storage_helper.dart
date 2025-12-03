@@ -84,7 +84,7 @@ class StorageHelper {
   /// Saves a string value with the given key.
   /// If [_isEncrypKeyValue] is true, both the key and value will be encrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key and value will be stored as is.
-  static void saveString(String key, String value) {
+  static void saveString({required String key, required String value}) {
     final encKey = _isEncrypKeyValue ? SecureCompressor.encrypt(key, _encryptionKey) : key;
     final finalValue = _isEncrypKeyValue ? SecureCompressor.encrypt(value, _encryptionKey) : value;
     _box.write(encKey, finalValue);
@@ -93,10 +93,13 @@ class StorageHelper {
   /// Retrieves a string value for the given key.
   /// If [_isEncrypKeyValue] is true, both the key and value will be decrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key and value will be read as is.
-  /// Returns an empty string if the key does not exist.
-  static String getString(String key) {
+  /// Returns null if the key does not exist.
+  static String? getString({required String key}) {
     final encKey = _isEncrypKeyValue ? SecureCompressor.encrypt(key, _encryptionKey) : key;
-    final value = _box.read(encKey) ?? '';
+    final value = _box.read(encKey);
+    if (value == null) {
+      return null;
+    }
     return _isEncrypKeyValue ? SecureCompressor.decrypt(value, _encryptionKey) : value;
   }
 
@@ -104,7 +107,7 @@ class StorageHelper {
   /// If [_isEncrypKeyValue] is true, the key will be encrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key will be stored as is.
   /// The value will be stored as a boolean.
-  static void saveBoolean(String key, bool value) {
+  static void saveBoolean({required String key, required bool value}) {
     final encKey = _isEncrypKeyValue ? SecureCompressor.encrypt(key, _encryptionKey) : key;
     _box.write(encKey, value);
   }
@@ -112,17 +115,17 @@ class StorageHelper {
   /// Retrieves a boolean value for the given key.
   /// If [_isEncrypKeyValue] is true, the key will be decrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key will be read as is.
-  /// Returns false if the key does not exist or if the value is not a boolean.
-  static bool getBoolean(String key) {
+  /// Returns null if the key does not exist or if the value is not a boolean.
+  static bool? getBoolean({required String key}) {
     final encKey = _isEncrypKeyValue ? SecureCompressor.encrypt(key, _encryptionKey) : key;
-    return _box.read(encKey) ?? false;
+    return _box.read(encKey);
   }
 
   /// Saves an integer value with the given key.
   /// If [_isEncrypKeyValue] is true, the key and value will be encrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key and value will be stored as is.
   /// The value will be stored as String if [_isEncrypKeyValue] is true.
-  static void saveInt(String key, int value) {
+  static void saveInt({required String key, required int value}) {
     final encKey = _isEncrypKeyValue ? SecureCompressor.encrypt(key, _encryptionKey) : key;
     final finalValue = _isEncrypKeyValue ? SecureCompressor.encrypt(value.toString(), _encryptionKey) : value;
     _box.write(encKey, finalValue);
@@ -131,10 +134,13 @@ class StorageHelper {
   /// Retrieves an integer value for the given key.
   /// If [_isEncrypKeyValue] is true, the key and value will be decrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key and value will be read as is.
-  /// Returns 0 if the key does not exist or if the value cannot be parsed as an integer.
-  static int getInt(String key) {
+  /// Returns null if the key does not exist or if the value cannot be parsed as an integer.
+  static int? getInt({required String key}) {
     final encKey = SecureCompressor.encrypt(key, _encryptionKey);
-    final value = _box.read(encKey) ?? 0;
+    final value = _box.read(encKey);
+    if (value == null) {
+      return null;
+    }
     if (_isEncrypKeyValue) {
       final decryptedValue = SecureCompressor.decrypt(value, _encryptionKey);
       return int.tryParse(decryptedValue) ?? 0;
@@ -146,7 +152,7 @@ class StorageHelper {
   /// If [_isEncrypKeyValue] is true, the key and value will be encrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key and value will be stored as is.
   /// The value will be stored as String if [_isEncrypKeyValue] is true.
-  static void saveDouble(String key, double value) {
+  static void saveDouble({required String key, required double value}) {
     final encKey = SecureCompressor.encrypt(key, _encryptionKey);
     final finalValue = _isEncrypKeyValue ? SecureCompressor.encrypt(value.toString(), _encryptionKey) : value;
     _box.write(encKey, finalValue);
@@ -155,13 +161,43 @@ class StorageHelper {
   /// Retrieves a double value for the given key.
   /// If [_isEncrypKeyValue] is true, the key and value will be decrypted using the [_encryptionKey].
   /// If [_isEncrypKeyValue] is false, the key and value will be read as is.
-  /// Returns 0.0 if the key does not exist or if the value cannot be parsed as a double.
-  static double getDouble(String key) {
+  /// Returns null if the key does not exist or if the value cannot be parsed as a double.
+  static double? getDouble({required String key}) {
     final encKey = SecureCompressor.encrypt(key, _encryptionKey);
-    final value = _box.read(encKey) ?? 0.0;
+    final value = _box.read(encKey);
+    if (value == null) {
+      return null;
+    }
     if (_isEncrypKeyValue) {
       final decryptedValue = SecureCompressor.decrypt(value, _encryptionKey);
       return double.tryParse(decryptedValue) ?? 0.0;
+    }
+    return value;
+  }
+
+  /// Saves a num value with the given key.
+  /// If [_isEncrypKeyValue] is true, the key and value will be encrypted using the [_encryptionKey].
+  /// If [_isEncrypKeyValue] is false, the key and value will be stored as is.
+  /// The value will be stored as String if [_isEncrypKeyValue] is true.
+  static void saveNum({required String key, required num value}) {
+    final encKey = SecureCompressor.encrypt(key, _encryptionKey);
+    final finalValue = _isEncrypKeyValue ? SecureCompressor.encrypt(value.toString(), _encryptionKey) : value;
+    _box.write(encKey, finalValue);
+  }
+
+  /// Retrieves a num value for the given key.
+  /// If [_isEncrypKeyValue] is true, the key and value will be decrypted using the [_encryptionKey].
+  /// If [_isEncrypKeyValue] is false, the key and value will be read as is.
+  /// Returns null if the key does not exist or if the value cannot be parsed as a double.
+  static num? getNum({required String key}) {
+    final encKey = SecureCompressor.encrypt(key, _encryptionKey);
+    final value = _box.read(encKey);
+    if (value == null) {
+      return null;
+    }
+    if (_isEncrypKeyValue) {
+      final decryptedValue = SecureCompressor.decrypt(value, _encryptionKey);
+      return int.tryParse(decryptedValue) ?? double.tryParse(decryptedValue);
     }
     return value;
   }
