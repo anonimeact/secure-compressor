@@ -1,3 +1,7 @@
+## 1.0.12
+
+* Add eraseData() funcion to remove data by the key
+
 ## 1.0.11
 
 * Auto trim key if more than 32 character

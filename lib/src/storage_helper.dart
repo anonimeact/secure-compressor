@@ -165,4 +165,18 @@ class StorageHelper {
     }
     return value;
   }
+
+  /// Deletes a single key-value pair from the storage box.
+  /// 
+  /// The [key] provided should be the original, unencrypted key string (e.g., 'user_token').
+  /// 
+  /// If [_isEncrypKeyValue] is true, the provided key is first encrypted 
+  /// using the [_encryptionKey] to match the stored encrypted key in the box. 
+  /// If false, the key is used as is.
+  /// 
+  /// This method performs the deletion synchronously.
+  static void eraseData(String key) {
+    final encKey = SecureCompressor.encrypt(key, _encryptionKey);
+    _box.remove(encKey);
+  }
 }

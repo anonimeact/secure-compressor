@@ -109,7 +109,6 @@ Save primitif data type as string, boolean, int, and double into local storage u
 
 Initializes the storage helper with the given parameters first befor run the app:
 ```dart
-
     await StorageHelper.initialize(
       'YOUR_STORAGE_NAME',
       isEncryptKeyAndValue: true, // Default true
@@ -120,8 +119,12 @@ Initializes the storage helper with the given parameters first befor run the app
 ```
 
 ```dart
-
 	StorageHelper.saveString('test_key', 'test_value');
     final savedData = StorageHelper.getString('test_key');
 
+```
+Erase data by key
+
+```dart
+	StorageHelper.eraseData('test_key',);
 ```
