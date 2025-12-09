@@ -31,3 +31,6 @@ migrate_working_dir/
 .flutter-plugins
 .flutter-plugins-dependencies
 build/
+
+test/data/public_key.pam
+test/data/private_key.pam
