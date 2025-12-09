@@ -1,3 +1,7 @@
+## 1.0.14
+
+* Add RSA encryption modules
+
 ## 1.0.13
 
 * Add function to save and get num type varsion

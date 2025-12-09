@@ -6,7 +6,10 @@ import 'package:secure_compressor_example/secure_compression_example.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  await StorageHelper.initialize('secure_compressor_storage', isEncryptKeyAndValue: true);
+  await StorageHelper.initialize(
+    'secure_compressor_storage',
+    isEncryptKeyAndValue: true,
+  );
   runApp(const MyApp());
 }
 
@@ -25,7 +28,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       color: Colors.white,
-      home: SecureCompressionExample()
+      home: SecureCompressionExample(),
     );
   }
 }

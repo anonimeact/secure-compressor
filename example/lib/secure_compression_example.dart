@@ -10,11 +10,11 @@ class SecureCompressionExample extends StatefulWidget {
   const SecureCompressionExample({super.key});
 
   @override
-  State<SecureCompressionExample> createState() => _SecureCompressionExampleState();
+  State<SecureCompressionExample> createState() =>
+      _SecureCompressionExampleState();
 }
 
 class _SecureCompressionExampleState extends State<SecureCompressionExample> {
-
   var dataResult = "";
   String? errorKeyString;
   final defaultKey = "50?thisIsEx4mplefor32EncryptKey!";
@@ -30,7 +30,9 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
     const originalText = "110317950632480998248";
     final encrypted = SecureCompressor.encrypt(originalText, key, ivString: iv);
     final decrypt = SecureCompressor.decrypt(encrypted, key, ivString: iv);
-    log("SecureCompressor: enc $encrypted ${"/DPZMixdbBPJbUszJe4tuA==" == encrypted}");
+    log(
+      "SecureCompressor: enc $encrypted ${"/DPZMixdbBPJbUszJe4tuA==" == encrypted}",
+    );
     log("SecureCompressor: dec $decrypt");
 
     StorageHelper.saveString(key: "test_key", value: "test_value");
@@ -40,7 +42,7 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          body: Container(
+      body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
@@ -48,176 +50,250 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              const Text("Secure Compressor Generator",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400)),
+              const Text(
+                "Secure Compressor Generator",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w400),
+              ),
               const SizedBox(height: 16),
               TextField(
                 controller: inputController,
                 minLines: 1,
                 maxLines: 10,
-                style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 13,
+                ),
                 decoration: InputDecoration(
-                    hintText: "Input your string data here",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                    suffix: InkWell(
-                      onTap: () => inputController.text = "",
-                      child: const Icon(Icons.close, color: Colors.black, size: 20))
+                  hintText: "Input your string data here",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  suffix: InkWell(
+                    onTap: () => inputController.text = "",
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.black,
+                      size: 20,
                     ),
-                    
+                  ),
+                ),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: keyController,
                 maxLength: 32,
-                style: const TextStyle(fontWeight: FontWeight.w300, fontSize: 13),
-                decoration: InputDecoration(
-                    hintText: "Input 32 character custom key (optional)",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-                    suffix: InkWell(
-                      onTap: () => keyController.text = "",
-                      child: const Icon(Icons.close, color: Colors.black, size: 20)),
-                      errorText: errorKeyString
-                    ),
-              ),
-              Row(mainAxisSize: MainAxisSize.min, children: [
-                const Text("Default Key:", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w300)),
-                Padding(
-                  padding: const EdgeInsets.only(left: 3, right: 10),
-                  child: Text(defaultKey, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 13,
                 ),
-                InkWell(
-                  onTap: () {
-                    Clipboard.setData(ClipboardData(text: defaultKey));
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied!")));
-                  },
-                  child: const Icon(Icons.copy_outlined))
-              ]),
+                decoration: InputDecoration(
+                  hintText: "Input 32 character custom key (optional)",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  suffix: InkWell(
+                    onTap: () => keyController.text = "",
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                  ),
+                  errorText: errorKeyString,
+                ),
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Default Key:",
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w300),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 3, right: 10),
+                    child: Text(
+                      defaultKey,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: defaultKey));
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(const SnackBar(content: Text("Copied!")));
+                    },
+                    child: const Icon(Icons.copy_outlined),
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
               /** Button action widget */
               buttonActionWidget(),
 
               /** Showing the result */
               Visibility(
-                  visible: dataResult.isNotEmpty,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.grey[200]),
-                    child: Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        Container(
-                        padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-                          width: double.infinity,
-                        child: Text(dataResult,
-                            maxLines: 10,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 13, color: dataResult.contains("::: Error") ? Colors.red : Colors.black)),
+                visible: dataResult.isNotEmpty,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.grey[200],
+                  ),
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 32,
+                          horizontal: 16,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(5.0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              InkWell(
-                                  onTap: () => copyData(),
-                                  child: const Icon(Icons.copy)),
-                              const SizedBox(width: 12),
-                              InkWell(
-                                  onTap: () => shareData(),
-                                  child: const Icon(Icons.share)),
-                            ],
+                        width: double.infinity,
+                        child: Text(
+                          dataResult,
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color:
+                                dataResult.contains("::: Error")
+                                    ? Colors.red
+                                    : Colors.black,
                           ),
-                        )
-                      ],
-                    ),
-                  )),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            InkWell(
+                              onTap: () => copyData(),
+                              child: const Icon(Icons.copy),
+                            ),
+                            const SizedBox(width: 12),
+                            InkWell(
+                              onTap: () => shareData(),
+                              child: const Icon(Icons.share),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               _bannerAd != null
-                ? Container(
+                  ? Container(
                     margin: const EdgeInsets.only(top: 16),
                     width: _bannerAd!.size.width.toDouble(),
                     height: _bannerAd!.size.height.toDouble(),
                     child: AdWidget(ad: _bannerAd!),
                   )
-                : Container()
+                  : Container(),
             ],
           ),
         ),
-      ));
+      ),
+    );
   }
 
   Widget buttonActionWidget() {
-    final encryptionKey = keyController.text.isEmpty ? "50?thisIsEx4mplefor32EncryptKey!" : keyController.text;
-    return Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
+    final encryptionKey =
+        keyController.text.isEmpty
+            ? "50?thisIsEx4mplefor32EncryptKey!"
+            : keyController.text;
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
                   if (isKeyStringValid()) {
-                    dataResult = SecureCompressor.encrypt(originData, encryptionKey);
+                    dataResult = SecureCompressor.encrypt(
+                      originData,
+                      encryptionKey,
+                    );
                   }
                   hideSoftKeyboard();
                 });
               },
-              child: const Text("Encrypt")),
-          const SizedBox(width: 8),
-          ElevatedButton(
+              child: const Text("Encrypt"),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
                   if (isKeyStringValid()) {
-                    dataResult = SecureCompressor.compressAndEncrypt(originData, encryptionKey);
+                    dataResult = SecureCompressor.compressAndEncrypt(
+                      originData,
+                      encryptionKey,
+                    );
                   }
                   hideSoftKeyboard();
                 });
               },
-              child: const Text("Encrypt & Compress")),
-        ],
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
+              child: const Text("Encrypt & Compress"),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
                   if (isKeyStringValid()) {
-                    dataResult = SecureCompressor.decrypt(originData, encryptionKey);
+                    dataResult = SecureCompressor.decrypt(
+                      originData,
+                      encryptionKey,
+                    );
                   }
                   hideSoftKeyboard();
                 });
               },
-              child: const Text("Decrypt")),
-          const SizedBox(width: 8),
-          ElevatedButton(
+              child: const Text("Decrypt"),
+            ),
+            const SizedBox(width: 8),
+            ElevatedButton(
               onPressed: () {
                 final originData = inputController.text;
                 setState(() {
                   if (isKeyStringValid()) {
-                    dataResult = SecureCompressor.uncompressAndDecrypt(originData, encryptionKey);
+                    dataResult = SecureCompressor.uncompressAndDecrypt(
+                      originData,
+                      encryptionKey,
+                    );
                   }
                   hideSoftKeyboard();
                 });
               },
-              child: const Text("Decrypt & Uncompress")),
-        ],
-      ),
-    ]);
+              child: const Text("Decrypt & Uncompress"),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
   bool isKeyStringValid() {
     final key = keyController.text;
-    final isValid = key.isEmpty
-        ? true
-        : key.length == 32
+    final isValid =
+        key.isEmpty
+            ? true
+            : key.length == 32
             ? true
             : false;
-    errorKeyString = isValid ? null : "Custom key must be 32 character" ;
+    errorKeyString = isValid ? null : "Custom key must be 32 character";
     if (!isValid) {
       dataResult = "";
     }
@@ -230,7 +306,9 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
 
   void copyData() {
     Clipboard.setData(ClipboardData(text: dataResult));
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Copied!")));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Copied!")));
   }
 
   Future<void> shareData() async {
@@ -240,10 +318,13 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
     if (dataResult.isEmpty) return;
     final fileName = "sc_result${DateTime.now().millisecondsSinceEpoch}.txt";
     final file = await SecureCompressor.saveDataToLocal(fileName, dataResult);
-    final params = ShareParams(text: 'Encrypted file', files: [XFile(file!.path)]);
+    final params = ShareParams(
+      text: 'Encrypted file',
+      files: [XFile(file!.path)],
+    );
     SharePlus.instance.share(params);
   }
-  
+
   BannerAd? _bannerAd;
   void loadAd() {
     _bannerAd = BannerAd(
@@ -254,7 +335,7 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
         onAdLoaded: (ad) {
           debugPrint('$ad loaded.');
         },
-        
+
         onAdFailedToLoad: (ad, err) {
           debugPrint('BannerAd failed to load: $err');
           ad.dispose();
