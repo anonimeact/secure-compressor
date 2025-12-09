@@ -2,12 +2,11 @@ part of '../secure_compressor.dart';
 
 /// A utility class for secure data compression and encryption.
 class SecureCompressor {
-
   ///  Singleton class for secure compression and hybrid encryption.
   ///
   /// Use [SecureCompressor.instance] or the factory constructor [SecureCompressor()]
   /// to access the single instance of this class.
-  
+
   /// The single shared instance of [SecureCompressor].
   static final SecureCompressor _instance = SecureCompressor._internal();
 
@@ -32,7 +31,10 @@ class SecureCompressor {
   /// - [privateKey]: PEM-formatted RSA private key for decryption.
   ///
   /// After initialization, [publicKey] and [privateKey] getters can be safely used.
-  static Future<void> initialize({required String publicKey, required String privateKey}) async {
+  static Future<void> initialize({
+    required String publicKey,
+    required String privateKey,
+  }) async {
     if (_initialized) return;
 
     _publicKey = RSAKeyParser().parse(publicKey) as RSAPublicKey;
@@ -101,7 +103,9 @@ class SecureCompressor {
   /// Returns the compressed data as a string.
   static String compress(String data) {
     try {
-      return data.isEmpty ? '' : String.fromCharCodes(gzip.encode(utf8.encode(data)));
+      return data.isEmpty
+          ? ''
+          : String.fromCharCodes(gzip.encode(utf8.encode(data)));
     } catch (_) {
       return ':::: Error uncompressing data';
     }
@@ -132,7 +136,12 @@ class SecureCompressor {
   }) {
     if (data.isEmpty) return '';
     final compressedData = compress(data);
-    final encryptedData = encrypt(compressedData, keyString, ivString: ivString, mode: mode);
+    final encryptedData = encrypt(
+      compressedData,
+      keyString,
+      ivString: ivString,
+      mode: mode,
+    );
     return compress(encryptedData);
   }
 
@@ -150,7 +159,12 @@ class SecureCompressor {
   }) {
     if (data.isEmpty) return '';
     final uncompressedData = uncompress(data);
-    final decryptedData = decrypt(uncompressedData, keyString, ivString: ivString, mode: mode);
+    final decryptedData = decrypt(
+      uncompressedData,
+      keyString,
+      ivString: ivString,
+      mode: mode,
+    );
     return uncompress(decryptedData);
   }
 
@@ -219,9 +233,14 @@ class SecureCompressor {
     final encrypted = encrypter.encrypt(plainText, iv: iv);
 
     final authTag = encrypted.bytes.sublist(encrypted.bytes.length - 16);
-    final cipherTextWithoutTag = encrypted.bytes.sublist(0, encrypted.bytes.length - 16);
+    final cipherTextWithoutTag = encrypted.bytes.sublist(
+      0,
+      encrypted.bytes.length - 16,
+    );
 
-    final rsaEncrypter = Encrypter(RSA(publicKey: publicKey, encoding: RSAEncoding.OAEP));
+    final rsaEncrypter = Encrypter(
+      RSA(publicKey: publicKey, encoding: RSAEncoding.OAEP),
+    );
     final encryptedKey = rsaEncrypter.encrypt(base64Encode(aesKey.bytes));
 
     return {
@@ -249,13 +268,22 @@ class SecureCompressor {
   /// Ensure that the `encryptedData` map comes from a trusted source, as
   /// tampering can cause decryption to fail or throw an exception.
   static Future<String> decryptRsa(Map<String, dynamic> encryptedData) async {
-    final rsaDecrypter = Encrypter(RSA(privateKey: privateKey, encoding: RSAEncoding.OAEP));
-    final decryptedKey = base64.decode(rsaDecrypter.decrypt(Encrypted.fromBase64(encryptedData['encryptedKey'])));
+    final rsaDecrypter = Encrypter(
+      RSA(privateKey: privateKey, encoding: RSAEncoding.OAEP),
+    );
+    final decryptedKey = base64.decode(
+      rsaDecrypter.decrypt(Encrypted.fromBase64(encryptedData['encryptedKey'])),
+    );
     final aesKey = Key(Uint8List.fromList(decryptedKey));
 
-    final Uint8List encryptedDataBytes = hexToBytes(encryptedData['encryptedData']!);
+    final Uint8List encryptedDataBytes = hexToBytes(
+      encryptedData['encryptedData']!,
+    );
     final Uint8List authTagBytes = hexToBytes(encryptedData['authTag']!);
-    final Uint8List combinedBytes = Uint8List.fromList([...encryptedDataBytes, ...authTagBytes]);
+    final Uint8List combinedBytes = Uint8List.fromList([
+      ...encryptedDataBytes,
+      ...authTagBytes,
+    ]);
     final iv = IV(hexToBytes(encryptedData['iv']));
 
     final encrypter = Encrypter(AES(aesKey, mode: AESMode.gcm));
@@ -270,7 +298,10 @@ class SecureCompressor {
 
   static Uint8List hexToBytes(String hex) {
     return Uint8List.fromList(
-      List.generate(hex.length ~/ 2, (i) => int.parse(hex.substring(i * 2, i * 2 + 2), radix: 16)),
+      List.generate(
+        hex.length ~/ 2,
+        (i) => int.parse(hex.substring(i * 2, i * 2 + 2), radix: 16),
+      ),
     );
   }
 }
