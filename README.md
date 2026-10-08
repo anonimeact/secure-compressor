@@ -37,6 +37,20 @@ secure_compressor: <Latest-Version>
 
 Then, run flutter pub get to fetch the package.
 
+## Requirements
+
+- Flutter >= 3.44 and Dart >= 3.12.
+- Android Gradle Plugin 8.x or 9.x.
+
+On AGP 8.x this plugin applies the Kotlin Gradle Plugin itself. No app Gradle changes are required.
+
+On AGP 9+, enable built-in Kotlin so the plugin does not apply KGP and the Flutter KGP warning stays clear:
+
+1. In `android/gradle.properties`, set `android.builtInKotlin=true`.
+2. Migrate `android/app/build.gradle` or `android/app/build.gradle.kts` off `kotlin-android`, following the [Flutter built-in Kotlin guide](https://docs.flutter.dev/release/breaking-changes/migrate-to-built-in-kotlin/for-app-developers).
+
+If an AGP 9 app still sets `android.builtInKotlin=false`, this plugin keeps applying KGP so the Android build continues to compile. Flutter may still warn until the app turns built-in Kotlin on. Enabling `android.builtInKotlin=true` needs Flutter >= 3.47.
+
   
 
 ## Usages

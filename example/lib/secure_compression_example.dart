@@ -2,9 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:secure_compressor/secure_compressor.dart';
-import 'package:share_plus/share_plus.dart';
 
 class SecureCompressionExample extends StatefulWidget {
   const SecureCompressionExample({super.key});
@@ -24,7 +22,6 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
   @override
   void initState() {
     super.initState();
-    loadAd();
     const key = "duDluYlEkzk68D3fFcL80iG6FF9n1cvW"; // 32 karakter
     const iv = "h7EvzZ+vwkjns0vt"; // 16 karakter
     const originalText = "110317950632480998248";
@@ -187,14 +184,6 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
                   ),
                 ),
               ),
-              _bannerAd != null
-                  ? Container(
-                    margin: const EdgeInsets.only(top: 16),
-                    width: _bannerAd!.size.width.toDouble(),
-                    height: _bannerAd!.size.height.toDouble(),
-                    child: AdWidget(ad: _bannerAd!),
-                  )
-                  : Container(),
             ],
           ),
         ),
@@ -312,35 +301,12 @@ class _SecureCompressionExampleState extends State<SecureCompressionExample> {
   }
 
   Future<void> shareData() async {
-    /// Share the given [data] to media platform with the provided [fileName].
-    ///
-    /// The file will be shared in the  media platform device used
     if (dataResult.isEmpty) return;
     final fileName = "sc_result${DateTime.now().millisecondsSinceEpoch}.txt";
     final file = await SecureCompressor.saveDataToLocal(fileName, dataResult);
-    final params = ShareParams(
-      text: 'Encrypted file',
-      files: [XFile(file!.path)],
+    if (!mounted || file == null) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Saved to ${file.path}')),
     );
-    SharePlus.instance.share(params);
-  }
-
-  BannerAd? _bannerAd;
-  void loadAd() {
-    _bannerAd = BannerAd(
-      adUnitId: 'ca-app-pub-2785838023943615/8094872898',
-      request: const AdRequest(),
-      size: AdSize.fullBanner,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          debugPrint('$ad loaded.');
-        },
-
-        onAdFailedToLoad: (ad, err) {
-          debugPrint('BannerAd failed to load: $err');
-          ad.dispose();
-        },
-      ),
-    )..load();
   }
 }

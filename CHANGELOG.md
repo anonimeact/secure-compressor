@@ -1,3 +1,8 @@
+## 1.0.15
+
+* Android: support AGP 9 built-in Kotlin, and keep applying the Kotlin Gradle Plugin on AGP 8 or when `android.builtInKotlin=false`.
+* Raise the minimum supported SDK to Flutter 3.44 / Dart 3.12.
+
 ## 1.0.14
 
 * Add RSA encryption modules

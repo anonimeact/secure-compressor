@@ -1,28 +1,41 @@
-group = "com.anonimeact.secure_compressor"
-version = "1.0-SNAPSHOT"
-
 buildscript {
-    ext.kotlin_version = "1.8.22"
+    ext.kotlin_version = "2.3.20"
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.7.0")
+        // Used only when this plugin applies KGP itself (AGP < 9, or AGP 9+ with
+        // android.builtInKotlin=false). AGP is provided by the host app.
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
+plugins {
+    id "com.android.library"
 }
 
-apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+group = "com.anonimeact.secure_compressor"
+version = "1.0-SNAPSHOT"
+
+// AGP 9+ compiles Kotlin itself when built-in Kotlin is enabled. Apply KGP only
+// for older AGP, or when the host app explicitly opts out with
+// android.builtInKotlin=false.
+//
+// Use apply(plugin:) rather than `apply plugin: "kotlin-android"`. Flutter
+// 3.44–3.47 decides the KGP warning by regex-matching that legacy line, so a
+// conditional `apply plugin:` still flags this plugin even when the branch is
+// not taken.
+def agpMajor = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0] as int
+def builtInKotlin = providers.gradleProperty("android.builtInKotlin")
+    .map { it.toBoolean() }
+    .orElse(agpMajor >= 9)
+    .get()
+def applyKotlinGradlePlugin = agpMajor < 9 || !builtInKotlin
+if (applyKotlinGradlePlugin) {
+    apply(plugin: "kotlin-android")
+}
 
 android {
     namespace = "com.anonimeact.secure_compressor"
@@ -33,10 +46,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11
     }
 
     sourceSets {
@@ -65,3 +74,8 @@ android {
         }
     }
 }
+
+extensions.getByType(org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension)
+    .compilerOptions
+    .jvmTarget
+    .set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
