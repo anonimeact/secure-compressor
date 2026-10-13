@@ -41,8 +41,13 @@ class StorageHelper {
         'Encryption key must not be null or less thank 32 characters.',
       );
     }
-    String unixId =
-        await SecureCompressor.getUnixId() ?? encryptionKey ?? _storageName;
+    String? platformUnixId;
+    if (!kIsWeb &&
+        (defaultTargetPlatform == TargetPlatform.android ||
+            defaultTargetPlatform == TargetPlatform.iOS)) {
+      platformUnixId = await SecureCompressor.getUnixId();
+    }
+    String unixId = platformUnixId ?? encryptionKey ?? _storageName;
     if (unixId.length < 32) {
       unixId += (encryptionKey ?? '') + _storageName;
       unixId = unixId.padRight(32, '0');

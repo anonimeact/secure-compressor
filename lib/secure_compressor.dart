@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart'
+    show defaultTargetPlatform, kIsWeb, TargetPlatform;
 import 'package:encrypt/encrypt.dart' as encriptor;
 import 'package:encrypt/encrypt.dart';
 import 'package:get_storage/get_storage.dart';

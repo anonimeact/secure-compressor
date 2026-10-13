@@ -1,3 +1,7 @@
+## 1.0.16
+
+* StorageHelper: call `getUnixId()` only on Android and iOS so web and other platforms no longer crash during `initialize` (falls back to `encryptionKey` or storage name).
+
 ## 1.0.15
 
 * Android: support AGP 9 built-in Kotlin, and keep applying the Kotlin Gradle Plugin on AGP 8 or when `android.builtInKotlin=false`.
