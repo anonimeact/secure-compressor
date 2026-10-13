@@ -1,2 +1,33 @@
+# When this file exists, pub publish does NOT apply .gitignore — list all publish exclusions here.
+
+# Build & tooling
+build/
+.dart_tool/
+**/.dart_tool/
+**/build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+
+# IDE / OS
+.DS_Store
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Tests (not shipped to pub.dev consumers)
+test/
+android/src/test/
+example/ios/RunnerTests/
+
+# Example app artifacts & tests
+example/test/
+example/.dart_tool/
+example/build/
+example/**/build/
+
+# Local / secret test assets
 test/data/private_key.pam
 test/data/public_key.pam
